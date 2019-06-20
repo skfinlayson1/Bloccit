@@ -26,7 +26,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         onDelete: "CASCADE",
         references: {
-          model: "Topics", //Added s to Topics
+          model: "Topics", //Added s to Topics 
           key: "id",
           as: "topicId",
         } //Removed comma
