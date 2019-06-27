@@ -7,12 +7,20 @@
     <% include ../static/partials/navbar.ejs %>
 
     <main class="container">
+      <ul class="flair-list">
+        <% topic.flairs.forEach((flair) => { %>
+          <li class="flair">
+            <a style="color: white; padding: 15px; background-color:<%=flair.color%>" href="/topics/<%= topic.id %>/flairs/<%= flair.id %>/edit"><%= flair.name %></a>
+          </li>
+        <% }) %>
+      </ul>
       <h1><%= topic.title %></h1>
       <a href="/topics/<%= topic.id %>/edit" class="btn btn-warning">Edit</a>
       <a href="/topics/<%= topic.id %>/posts/new" class="btn btn-success">New Post</a>
       <form style="display:initial" action="/topics/<%= topic.id %>/destroy" method="post">
         <button type="submit" class="btn btn-danger">Delete</button>
       </form>
+      <a href='/topics/<%= topic.id %>/flairs/new' class="btn btn-success">New Flair</a>
       <p><%= topic.description %></p>
       <hr>
 
