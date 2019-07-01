@@ -29,7 +29,7 @@ module.exports = {
         });
 
         passport.deserializeUser((id, callback) => {
-            User.findById(id) //have to use findById, findByPk not available until version 5
+            User.findById(id) //have to use findById, findByPk not available until version 5 
             .then((user) => {
                 callback(null, user);
             })
