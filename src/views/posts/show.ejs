@@ -10,7 +10,13 @@
 
         <% include ../static/partials/messages.ejs %>
 
-        <h1><%= post.title %></h1>
+        <div style="display: flex; align-items:center;">
+          <% if(currentUser) { %>
+            <% include ../votes/voting.ejs %>
+          <% } %>
+          <h1><%= post.title %></h1>
+        </div>
+
         <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>/edit" class="btn btn-warning">Edit</a>
         <form style="display:initial" action="/topics/<%= post.topicId %>/posts/<%= post.id %>/destroy" method="post">
             <button type="submit" class="btn btn-danger">Delete</button>
@@ -21,18 +27,15 @@
 
         <section id="comment-form">
 
-            <!-- #1 -->
                <% if(currentUser) { %>
                  <% include ../comments/new.ejs %>
                <% } %>
               </section>
            
-            <!-- #2 -->
               <section id="comment-list">
                <% if(post.comments) { %>
                  <% post.comments.forEach((comment) => { %>
            
-            <!-- #3 -->
                    <%- include("../comments/show.ejs", {comment}) %>
                  <% }) %>
                <% } %>
