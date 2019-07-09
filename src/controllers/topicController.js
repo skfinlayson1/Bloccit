@@ -33,7 +33,7 @@ module.exports = {
 				description: req.body.description
 			};
 
-			topicQueries.addTopic(newTopic, (err, topic) => {
+			topicQueries.addTopic(newTopic, (err, topic) => { 
 				if(err) {
 					res.redirect(500, "/topics/new");
 				} else {

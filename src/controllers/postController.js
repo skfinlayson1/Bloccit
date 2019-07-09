@@ -1,9 +1,17 @@
 const postQueries = require("../db/queries.posts");
+const Authorizer = require("../policies/posts");
 
 module.exports = {
 
     new(req, res, next) {
-        res.render("posts/new", {topicId: req.params.topicId});
+        const authorized = new Authorizer(req.user).new();
+
+        if(authorized) {
+            res.render("posts/new", {topicId: req.params.topicId});
+        } else {
+            req.flash("notice", "You must be signed in to do that");
+            res.redirect("/");
+        }
     },
 
     create(req, res, next) {
@@ -35,12 +43,26 @@ module.exports = {
     },
 
     destroy(req, res, next) {
-        postQueries.deletePost(req.params.id, (err, deleteRecordsCount) => {
-            if(err) {
-                res.redirect(500, `/topics/${req.params.topicId}/posts/${req.params.id}`)
+
+        postQueries.getPost(req.params.id, (err, post) => {
+            if(err || post == null) {
+                res.redirect(404, "/");
             } else {
-                res.redirect(303, `/topics/${req.params.topicId}`)
-            }
+                const authorized = new Authorizer(req.user, post).destroy();
+
+                if(authorized) {
+                    postQueries.deletePost(req.params.id, (err, deleteCount) => {
+                        if(err) {
+                            res.redirect(500, "/");
+                        } else {
+                            res.redirect("/");
+                        }
+                    })
+                } else {
+                    req.flash("notice", "You need to be signed in or be the person who created the post");
+                    res.redirect("/");
+                }
+            };
         });
     },
 
@@ -49,8 +71,15 @@ module.exports = {
             if(err || post == null) {
                 res.redirect(404, "/");
             } else {
-                res.render("posts/edit", {post});
-            }
+                const authorized = new Authorizer(req.user, post).destroy();
+
+                if(authorized) {
+                    res.render("posts/edit", {post});
+                } else {
+                    req.flash("notice", "You must be the owner of this post to edit it");
+                    res.redirect("/");
+                };
+            };
         });
     },
 

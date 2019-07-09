@@ -193,3 +193,112 @@ describe("routes : posts", () => {
 
 
 });
+
+
+
+
+
+// New layout =================================================================================================
+
+
+
+const request = require("request");
+const server = require("../../src/server");
+const base = "http://localhost:3000/topics/"; //added back slash for convenience
+
+const sequelize = require("../../src/db/models/index").sequelize;
+const Topic = require("../../src/db/models").Topic;
+const Post = require("../../src/db/models").Post;
+const User = require("../../src/db/models").User;
+
+
+describe("routes : posts", () => {
+
+    beforeEach((done) => {
+
+        //Before each test sweet
+
+    });
+
+    // Context of Admin using CRUD actions on post ----------------------------------------------------------------
+
+    describe("Admin user CRUD", () => {
+
+        beforeEach((done) => {
+
+            // Create admin user for CRUD actions
+
+        });
+
+        describe("/topics/:topicId/posts/create", () => {
+
+            // Admin user attempting to create a post == (should be allowed)
+
+        });
+
+        describe("/topics/:topicId/posts/:postId/update", () => {
+
+            // Admin user attempting to edit/update a post == (Admin should be allowed)
+
+        });
+
+        describe("/topics/:topicId/posts/:postId/delete", () => {
+
+            // Admin user attempting to delete a post == (Admin should be allowed)
+
+        });
+
+    });
+
+    // Member attempting CRUD actions ------------------------------------------------------------------------------
+
+    describe("Member user attempting CRUD actions", () => {
+
+        beforeEach((done) => {
+
+            // Create Memeber user for CRUD actions
+
+        });
+
+        describe("/topics/:topicId/posts/create", () => {
+
+            // Member user attempting to create a post == (should be allowed)
+
+        });
+
+        describe("/topics/:topicId/posts/:postId/update", () => {
+
+            // Admin/Member user attempting to edit/update a post == (Member should only be allowed if it's their post)
+
+        });
+
+        describe("/topics/:topicId/posts/:postId/delete", () => {
+
+            // Admin/Member user attempting to delete a post == (Member should only be allowed if it's their post)
+
+        });
+
+
+    });
+
+    // Guest user CRUD actions --------------------------------------------------------------------------------
+
+    describe("Guest user attempting CRUD actions", () => {
+
+        beforeEach((done) => {
+
+            // visit sight as Guest
+
+        });
+
+        describe("/topics/:topicId/posts/:postId/show", () => {
+
+            // Guest attempting to view post == (should be allowed)
+
+        });
+
+    });
+
+
+
+});
