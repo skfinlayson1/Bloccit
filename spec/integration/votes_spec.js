@@ -54,46 +54,7 @@ describe("routes : votes", () => {
 
     });
 
-    describe("guest attempting to vote on a post", () => {
-
-        beforeEach((done) => {
-            request.get({
-                url: "http://localhost:3000/auth/fake",
-                form: {
-                    userId: 0
-                }
-            }, (err, res, body) => {
-                done();
-            });
-        });
-
-        describe("Get /topics/:topicId/posts/:postId/votes/upvote", () => {
-
-            it("should not create a new vote", (done) => {
-                const options = {url: `${base}${this.topic.id}/posts/${this.post.id}/votes/upvote`};
-
-                request.get(options, (err, res, body) => {
-                    Vote.findOne({
-                        where: {
-                            userId: this.user.id,
-                            postId: this.post.id
-                        }
-                    })
-                    .then((vote) => {
-                        expect(vote).toBeNull();
-                        done();
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        done();
-                    });
-                });
-
-            });
-
-        });
-
-    });
+    // Signed in user ----------------------------------------------------------------------------------------
 
     describe("signed in user voting on a post", () => {
 
@@ -137,6 +98,27 @@ describe("routes : votes", () => {
                 });
             });
 
+            it("should not allow an upvote higher than 1", (done) => {
+
+                const options = {url: `${base}${this.topic.id}/posts/${this.post.id}/votes/upvote`};
+
+                request.get(options, (err, res, body) => {
+                    Vote.findAll()
+                    .then((votes) => {
+                        const voteLength = votes.length;
+
+                        request.get(options, (err, res, body) => {
+                            Vote.findAll()
+                            .then((votes) => {
+                                expect(votes.length).toBe(voteLength);
+                                done();
+                            });
+                        });
+                    });
+                });
+
+            });
+
         });
 
         describe("Get /topics/:topicId/posts/:postId/votes/downvote", () => {
@@ -169,8 +151,53 @@ describe("routes : votes", () => {
 
     });
 
+    // Guest user -----------------------------------------------------------------------------------------------
+
+    describe("guest attempting to vote on a post", () => {
+
+        beforeEach((done) => {
+            request.get({
+                url: "http://localhost:3000/auth/fake",
+                form: {
+                    userId: 0
+                }
+            }, (err, res, body) => {
+                done();
+            });
+        });
+
+        describe("Get /topics/:topicId/posts/:postId/votes/upvote", () => {
+
+            it("should not create a new vote", (done) => {
+                const options = {url: `${base}${this.topic.id}/posts/${this.post.id}/votes/upvote`};
+
+                request.get(options, (err, res, body) => {
+                    Vote.findOne({
+                        where: {
+                            userId: this.user.id,
+                            postId: this.post.id
+                        }
+                    })
+                    .then((vote) => {
+                        expect(vote).toBeNull();
+                        done();
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        done();
+                    });
+                });
+
+            });
+
+        });
+
+    });
 
 
 
 
-})
+
+
+
+});

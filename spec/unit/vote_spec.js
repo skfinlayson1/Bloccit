@@ -5,6 +5,8 @@ const Comment = require("../../src/db/models").Comment;
 const User = require("../../src/db/models").User;
 const Vote = require("../../src/db/models").Vote;
 
+const request = require("request");
+
 describe("Vote", () => {
 
     beforeEach((done) => {
@@ -106,6 +108,24 @@ describe("Vote", () => {
                 console.log(err);
                 done();
             });
+
+        });
+
+        it("should not create a vote with a value greater or less than -1 or 1", (done) => {
+
+            Vote.create({
+                value: 3,
+                postId: this.post.id,
+                userId: this.user.id
+            })
+            .then((vote) => {
+                console.log("an error has occured and a value not -1 or 1 has been passed");
+                done();
+            })
+            .catch((err) => {
+                expect(err).not.toBeNull();
+                done();
+            })
 
         });
 
@@ -241,6 +261,84 @@ describe("Vote", () => {
                 done();
             });
         });
+
+    });
+
+    describe("#getPoints", () => {
+
+        it("should return the total points for a post", (done) => {
+
+            Vote.create({
+                value: 1,
+                postId: this.post.id,
+                userId: this.user.id
+            })
+            .then((vote) => {
+                Post.findById(vote.postId, {
+                    include: {
+                        model: Vote,
+                        as: "votes"
+                    }
+                })
+                .then((post) => {
+                    expect(post.getPoints()).toBe(1);
+                    done()
+                });
+            });
+   
+        });
+
+    });
+
+    describe("#hasUpvoteFor()", () => {
+
+        it("should check for an upvote for a specific user on a post", (done) => {
+            Vote.create({
+                value: 1,
+                postId: this.post.id,
+                userId: this.user.id
+            })
+            .then((vote) => {
+                Post.findById(vote.postId, {
+                    include: {
+                        model: Vote,
+                        as: "votes"
+                    }
+                })
+                .then((post) => {
+                    expect(post.hasUpvoteFor(this.user.id)).toBe(true);
+                    done();
+                });
+            });
+        });
+
+
+
+    });
+
+    describe("#hasDownvoteFor()", () => {
+
+        it("should check for a downvote for a specific user on a post", (done) => {
+            Vote.create({
+                value: -1,
+                postId: this.post.id,
+                userId: this.user.id
+            })
+            .then((vote) => {
+                Post.findById(vote.postId, {
+                    include: {
+                        model: Vote,
+                        as: "votes"
+                    }
+                })
+                .then((post) => {
+                    expect(post.hasDownvoteFor(this.user.id)).toBe(true)
+                    done();
+                });
+            });
+        });
+
+
 
     });
 
