@@ -66,6 +66,24 @@ module.exports = (sequelize, DataTypes) => {
     return this.favorites.find((favorite) => { return favorite.userId == userId });
   };
 
+  Post.prototype.hasUpvoteFor = function(userId) {
+
+    for (let i = 0; i < this.votes.length; i ++) {
+      if(this.votes[i].userId == userId && this.votes[i].value == 1) {return true;}
+    };
+    return false;
+
+  };
+
+  Post.prototype.hasDownvoteFor = function(userId) {
+
+    for (let i = 0; i < this.votes.length; i ++) {
+      if(this.votes[i].userId == userId && this.votes[i].value == -1) {return true;}
+    };
+    return false;
+
+  };
+
   Post.addScope("lastFiveFor", (userId) => {
     return {
       where: {userId: userId}, limit: 5, order: [["createdAt", "DESC"]]
