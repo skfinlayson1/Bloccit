@@ -7,6 +7,11 @@ const Topic = require("../../src/db/models").Topic;
 const Post = require("../../src/db/models").Post;
 const User = require("../../src/db/models").User;
 
+
+//
+// Need to implement proper layout ( seperate signed in users and guests test sweets)
+//
+
 describe("routes : posts", () => {
 
     beforeEach((done) => {
@@ -39,7 +44,17 @@ describe("routes : posts", () => {
                 .then((topic) => {
                     this.topic = topic;
                     this.post = topic.posts[0];
-                    done();
+                    const options = { // added authentication here as patch until proper layout is implemented
+                        url: "http://localhost:3000/auth/fake",
+                        form: {
+                            role: "memeber",
+                            userId: this.user.id
+                        }
+                    };
+        
+                    request.get(options, (err, res, body) => {
+                        done();
+                    });
                 })
             })
         });
