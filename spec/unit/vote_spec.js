@@ -268,22 +268,15 @@ describe("Vote", () => {
 
         it("should return the total points for a post", (done) => {
 
-            Vote.create({
-                value: 1,
-                postId: this.post.id,
-                userId: this.user.id
+            Post.findById(this.post.id, {
+                include: {
+                    model: Vote,
+                    as: "votes"
+                }
             })
-            .then((vote) => {
-                Post.findById(vote.postId, {
-                    include: {
-                        model: Vote,
-                        as: "votes"
-                    }
-                })
-                .then((post) => {
-                    expect(post.getPoints()).toBe(1);
-                    done()
-                });
+            .then((post) => {
+                expect(post.getPoints()).toBe(1);
+                done();
             });
    
         });

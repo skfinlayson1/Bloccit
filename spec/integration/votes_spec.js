@@ -19,7 +19,7 @@ describe("routes : votes", () => {
 
         sequelize.sync({force: true}).then((res) => {
             User.create({
-                email: "starman@tesla.com",
+                email: "shaneF@yahoo.com",
                 password: "Trekkie4lyfe"
             })
             .then((user) => {
@@ -168,13 +168,13 @@ describe("routes : votes", () => {
 
         describe("Get /topics/:topicId/posts/:postId/votes/upvote", () => {
 
-            it("should not create a new vote", (done) => {
+            it("should not allow a guest to create a new upvote", (done) => {
                 const options = {url: `${base}${this.topic.id}/posts/${this.post.id}/votes/upvote`};
 
                 request.get(options, (err, res, body) => {
                     Vote.findOne({
                         where: {
-                            userId: this.user.id,
+                            userId: 3,
                             postId: this.post.id
                         }
                     })
