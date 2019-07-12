@@ -25,9 +25,7 @@
           <% posts.forEach((post) => { %>
  <!-- #3 -->
             <li>
-              <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>">
-                <%= post.title %>
-              </a>
+              <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>"><%= post.title %></a>
             </li>
           <% }) %>
         <% } %>
@@ -44,12 +42,25 @@
 
  <!-- #5 -->
             <li>
-              <span>Post: </span><a href="/topics/<%= comment.Post.topicId %>/posts/<%= comment.Post.id %>">
-                <%= comment.Post.title %>
-              </a>
+              <span>Post: </span><a href="/topics/<%= comment.Post.topicId %>/posts/<%= comment.Post.id %>"><%= comment.Post.title %></a>
               <p>Comment: <%= comment.body %></p>
             </li>
             <hr>
+          <% }) %>
+        <% } %>
+      </ul>
+
+      <ul class="list-unstyled">
+        <% if(favorites) { %>
+
+          <h1>Favorites</h1>
+
+          <% favorites.forEach((favorite) => { %>
+
+            <li>
+              <a href="topics/<%= favorite.Post.topicId %>/posts/<%= favorite.postId %>"><%= favorite.Post.title %></a>
+            </li>
+
           <% }) %>
         <% } %>
       </ul>

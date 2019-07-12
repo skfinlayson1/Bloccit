@@ -58,7 +58,13 @@ module.exports = (sequelize, DataTypes) => {
         userId: post.userId,
         postId: post.id
       })
-    })
+    });
+
+    Post.addScope("lastFiveFor", (userId) => {
+      return {
+        where: {userId: userId}, limit: 5, order: [["createdAt", "DESC"]]
+      }
+    });
     
   };
 
@@ -91,12 +97,6 @@ module.exports = (sequelize, DataTypes) => {
     return false;
 
   };
-
-  Post.addScope("lastFiveFor", (userId) => {
-    return {
-      where: {userId: userId}, limit: 5, order: [["createdAt", "DESC"]]
-    }
-  });
 
   return Post;
 };

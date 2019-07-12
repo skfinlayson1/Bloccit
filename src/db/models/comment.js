@@ -29,8 +29,9 @@ module.exports = (sequelize, DataTypes) => {
     Comment.addScope("lastFiveFor", (userId) => {
       return {
         include: [{model: models.Post}],
-        where: {userId: userId},
-        limit: 5, order: [["createdAt", "DESC"]]
+          where: {userId: userId},
+          limit: 5,
+          order: [["createdAt", "DESC"]]
       };
     });
   };
